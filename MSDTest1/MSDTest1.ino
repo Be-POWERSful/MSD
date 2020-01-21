@@ -9,10 +9,10 @@
 */
 
 // digital pin 2 has a pushbutton attached to it. Give it a name:
-int ButtonL = 9;
+int ButtonL = 2;
 int ButtonR = 10;
-int LEDL = 2;
-int LEDR = A1;
+int LEDL = 13;
+int LEDR = 9;
 
 // the setup routine runs once when you press reset:
 void setup() {
@@ -31,19 +31,19 @@ void loop() {
   int bL = digitalRead(ButtonL);
   int bR = digitalRead(ButtonR);
 
-  
+  Serial.print(bL);
   if (bL == HIGH){
     
     digitalWrite(LEDL, HIGH);
    
   }
 
-
+if(bL==LOW){
     digitalWrite(LEDL, LOW);
-
+}
 
     if (bR == HIGH){
-    analogWrite(LEDR, 200);
+    digitalWrite(LEDR, HIGH);
    
   }
 
