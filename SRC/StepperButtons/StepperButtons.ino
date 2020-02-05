@@ -4,13 +4,16 @@
 
 // Buttons and LEDs
 // digital pin 2 is an interrupt pin
-const int Button1 = 2;
-const int Button2 = 10;
-const int LEDL = 13;
-const int LEDR = 9;
+const int Button1 = 10;
+const int Button2 = 2;
+const int LED1 = 13;
+const int LED2 = 9;
+
+// Ground and Power pins - AC pins
+
 
 // Global variables
-const int motorSpeed = 10;
+const int motorSpeed = 1000;
 const int numSteps = 200;
 const int spareTime = 10;
 const int holdTime = 1000;
@@ -30,11 +33,19 @@ void setup() {
   // Serial.begin(9600);
   // make the pushbutton's pin an input:
   pinMode(Button1, INPUT);
-  pinMode(LEDL, OUTPUT);
+  pinMode(LED1, OUTPUT);
   pinMode(Button2, INPUT);
-  pinMode(LEDR, OUTPUT);
+  pinMode(LED2, OUTPUT);
 
-  attachInterrupt(digitalPinToInterrupt(Button1), changestate, CHANGE);
+  // Setup Ground and Power
+  pinMode(A0, OUTPUT);
+  digitalWrite(A0, LOW);
+  pinMode(A1, OUTPUT);
+  digitalWrite(A1, HIGH);
+  pinMode(A2, OUTPUT);
+  digitalWrite(A2, LOW);
+  pinMode(A3, OUTPUT);
+  digitalWrite(A3, LOW);
   
   // Setup motorshield
   AFMS.begin();
@@ -43,45 +54,46 @@ void setup() {
   Motor2->setSpeed(motorSpeed);  // 10 rpm
 }
 
+int buttonState1 = digitalRead(Button1);
+int buttonState2 = digitalRead(Button2);
+
 void loop() {
   // read the input pin:
-//  int buttonState1 = digitalRead(Button1);
-  int buttonState2 = digitalRead(Button2);
+  buttonState1 = digitalRead(Button1);
+  digitalWrite(LED1, HIGH);
 
-  // Operate in the user input mode
-  while (state == HIGH){
-    buttonState2 = digitalRead(Button2);
-    // Turn on LED to signal user mode
-    digitalWrite(LEDL, HIGH);
-    if (buttonState2 == HIGH){
-      // Turn on second LED to illustrate currently turning
-      digitalWrite(LEDR, HIGH);
-      // Small steps of alternating motors for appearance of same time
-      for (int i = 0; i < numSteps/2; i++) {
-        Motor1->step(2, FORWARD, SINGLE);
-        Motor2->step(2, FORWARD, SINGLE);
-      }
-      delay(spareTime);
-      // Turn off second LED as it can be rotated again
-      digitalWrite(LEDR, LOW);
-    }
+  if (buttonState1 == HIGH){
+    manual();
   }
-  // Ensure LED is off for user input mode
-  digitalWrite(LEDL, LOW);
-  // Operate in the automatic mode
-  while (state == LOW){
-    // Small steps of alternating motors for appearance of same time
-    for (int i = 0; i < numSteps/2; i++) {
-      Motor1->step(2, FORWARD, SINGLE);
-      Motor2->step(2, FORWARD, SINGLE);
-    }
-    delay(holdTime);
-    count++;
+  else {
+    digitalWrite(LED2, LOW);
+    automatic();
   }
   delay(spareTime);
 }
 
-void changestate(){
-  // Switch modes of operation when the button is pressed
-  state != state;
+void automatic(){
+  // Small steps of alternating motors for appearance of same time
+    for (int i = 0; i < numSteps/2; i++) {
+      Motor1->step(2, FORWARD, SINGLE);
+      Motor2->step(2, BACKWARD, SINGLE);
+    }
+    delay(holdTime);
+}
+
+void manual(){
+  buttonState2 = digitalRead(Button2);
+    // Turn on LED to signal user mode
+    digitalWrite(LED2, HIGH);
+    if (buttonState2 == HIGH){
+      // Turn on second LED to illustrate currently turning
+      digitalWrite(LED2, LOW);
+      // Small steps of alternating motors for appearance of same time
+      for (int i = 0; i < numSteps/2; i++) {
+        Motor1->step(2, FORWARD, SINGLE);
+        Motor2->step(2, BACKWARD, SINGLE);
+      }
+      delay(spareTime);
+      // Turn off second LED as it can be rotated again
+    }
 }
