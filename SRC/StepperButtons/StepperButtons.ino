@@ -90,8 +90,8 @@ void manual(){
       digitalWrite(LED2, LOW);
       // Small steps of alternating motors for appearance of same time
       for (int i = 0; i < numSteps/2; i++) {
-        Motor1->step(2, FORWARD, SINGLE);
-        Motor2->step(2, BACKWARD, SINGLE);
+        Motor1->step(2, FORWARD, DOUBLE);
+        Motor2->step(2, BACKWARD, DOUBLE);
       }
       delay(spareTime);
       // Turn off second LED as it can be rotated again
