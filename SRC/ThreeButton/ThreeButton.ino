@@ -2,14 +2,15 @@
 #include <Adafruit_MotorShield.h>
 //#include "utility/Adafruit_PWMServoDriver.h"
 
+// Flashlight goes in 3.3 V and one of the GND pins
 // Buttons and LEDs
 // digital pin 2 is an interrupt pin
 const int Button1 = 10;
 const int Button2 = 2;
+const int Button3 = 8;
 const int LED1 = 13;
 const int LED2 = 9;
-const int Button3 = A4;
-const int LED3 = A5;
+const int LED3 = 6;
 
 // Global variables
 const int motorSpeed = 1000;
@@ -48,6 +49,8 @@ void setup() {
   digitalWrite(A2, LOW);
   pinMode(A3, OUTPUT);
   digitalWrite(A3, LOW);
+  pinMode(7, OUTPUT);
+  digitalWrite(7, HIGH);
   
   // Setup motorshield
   AFMS.begin();
@@ -95,17 +98,23 @@ void manual(){
   if (buttonState2 == HIGH){
     // Turn on second LED to illustrate currently turning
     digitalWrite(LED2, LOW);
+    digitalWrite(LED3, LOW);
     // Full quarter rotation of motor one for seperate wheel use
-    Motor1->step(fullSteps, FORWARD, DOUBLE);
-    delay(spareTime);
+    for (int i = 0; i < fullSteps/miniSteps; i++) {
+      Motor1->step(miniSteps, FORWARD, DOUBLE);
+      delay(spareTime);
+    } 
     // Turn off second LED as it can be rotated again
   }
   else if (buttonState3 == HIGH){
     // Turn on second LED to illustrate currently turning
+    digitalWrite(LED2, LOW);
     digitalWrite(LED3, LOW);
     // Full quarter rotation of motor two for seperate wheel use
-    Motor2->step(fullSteps, BACKWARD, DOUBLE);
-    delay(spareTime);
+    for (int i = 0; i < fullSteps/miniSteps; i++) {
+      Motor2->step(miniSteps, BACKWARD, DOUBLE);
+      delay(spareTime);
+    } 
     // Turn off second LED as it can be rotated again
   }
 }

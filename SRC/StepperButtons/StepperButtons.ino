@@ -2,15 +2,13 @@
 #include <Adafruit_MotorShield.h>
 //#include "utility/Adafruit_PWMServoDriver.h"
 
+// Flashlight goes in 3.3 V and one of the GND pins
 // Buttons and LEDs
 // digital pin 2 is an interrupt pin
 const int Button1 = 10;
 const int Button2 = 2;
 const int LED1 = 13;
 const int LED2 = 9;
-
-// Ground and Power pins - AC pins
-
 
 // Global variables
 const int motorSpeed = 1000;
