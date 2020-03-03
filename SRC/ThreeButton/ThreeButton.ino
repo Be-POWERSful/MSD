@@ -15,14 +15,15 @@ const int LED3 = 6;
 // Global variables
 const int motorSpeed = 1000;
 const int spareTime = 10;
-const int holdTime = 1000;
+const int holdTime = 500;
 const int fullSteps = 200;
 const int miniSteps = 2;
+const int numLenses = 4;
 volatile byte state = LOW;
 
 // used to test the modes
 int count = 0;
-
+int lensePos = 0;
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
@@ -70,6 +71,7 @@ void loop() {
 
   if (buttonState1 == HIGH){
     manual();
+    lensePos = 0;
   }
   else {
     digitalWrite(LED2, LOW);
@@ -80,12 +82,21 @@ void loop() {
 }
 
 void automatic(){
-  // Small steps of alternating motors for appearance of same time
-  for (int i = 0; i < fullSteps/miniSteps; i++) {
-    Motor1->step(miniSteps, FORWARD, DOUBLE);
-    Motor2->step(miniSteps, BACKWARD, DOUBLE);
-  } 
-  delay(holdTime);
+  // Rotate the lense wheel all the way around and then rotate the effect wheel once
+  if (lensePos < numLenses):
+    for (int i = 0; i < fullSteps/miniSteps; i++) {
+      Motor2->step(miniSteps, BACKWARD, DOUBLE);
+      delay(spareTime);
+    } 
+    delay(holdTime);
+    lensePos++;
+  else:
+    for (int i = 0; i < fullSteps/miniSteps; i++) {
+      Motor1->step(miniSteps, FORWARD, DOUBLE);
+      delay(spareTime);
+    }
+    delay(holdTime);
+    lensePos = 0;
 }
 
 void manual(){
