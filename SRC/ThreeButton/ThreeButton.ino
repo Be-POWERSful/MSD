@@ -69,7 +69,7 @@ void loop() {
   buttonState1 = digitalRead(Button1);
   digitalWrite(LED1, HIGH);
 
-  if (buttonState1 == HIGH){
+  if (buttonState1 == LOW){
     manual();
     lensePos = 0;
   }
@@ -83,20 +83,22 @@ void loop() {
 
 void automatic(){
   // Rotate the lense wheel all the way around and then rotate the effect wheel once
-  if (lensePos < numLenses):
+  if (lensePos < numLenses){
     for (int i = 0; i < fullSteps/miniSteps; i++) {
-      Motor2->step(miniSteps, BACKWARD, DOUBLE);
+      Motor2->step(miniSteps, FORWARD, DOUBLE);
       delay(spareTime);
     } 
     delay(holdTime);
     lensePos++;
-  else:
+  }
+  else{
     for (int i = 0; i < fullSteps/miniSteps; i++) {
       Motor1->step(miniSteps, FORWARD, DOUBLE);
       delay(spareTime);
     }
     delay(holdTime);
     lensePos = 0;
+  }
 }
 
 void manual(){
@@ -123,7 +125,7 @@ void manual(){
     digitalWrite(LED3, LOW);
     // Full quarter rotation of motor two for seperate wheel use
     for (int i = 0; i < fullSteps/miniSteps; i++) {
-      Motor2->step(miniSteps, BACKWARD, DOUBLE);
+      Motor2->step(miniSteps, FORWARD, DOUBLE);
       delay(spareTime);
     } 
     // Turn off second LED as it can be rotated again
