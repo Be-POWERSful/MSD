@@ -1,4 +1,4 @@
- #include <Wire.h>
+#include <Wire.h>
 #include <Adafruit_MotorShield.h>
 //#include "utility/Adafruit_PWMServoDriver.h"
 
@@ -18,7 +18,18 @@ const int spareTime = 10;
 const int holdTime = 3000;
 const int fullSteps = 200;
 const int miniSteps = 2;
-const int numLenses = 4;9600 bits per second:
+const int numLenses = 4;
+
+// Deteermines the state of the lense wheel in automatic mode
+int lensePos = 0;
+
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+
+Adafruit_StepperMotor *Motor1 = AFMS.getStepper(200, 1);
+Adafruit_StepperMotor *Motor2 = AFMS.getStepper(200, 2);
+
+void setup() {
+  // initialize serial communication at 9600 bits per second:
   // Serial.begin(9600);
   // make the pushbutton's pin an input:
   pinMode(Button1, INPUT);
