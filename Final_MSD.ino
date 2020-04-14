@@ -67,11 +67,16 @@ void loop() {
   buttonState1 = digitalRead(Button1);
   digitalWrite(LED1, HIGH);
 
+  // Mode button isn't pressed
   if (buttonState1 == LOW){
+    // Manual mode
     manual();
     lensePos = 0;
   }
+  // Mode button is pressed
   else {
+    // Automatic mode
+    // Turn off manual mode LEDs
     digitalWrite(LED2, LOW);
     digitalWrite(LED3, LOW);
     automatic();
@@ -80,21 +85,26 @@ void loop() {
 }
 
 void automatic(){
-  // Rotate the lense wheel all the way around and then rotate the effect wheel once
+  // Do a quarter of a rotation of either wheel based upon lensePos
+  // before returning the loop function
   if (lensePos < numLenses){
+    // Rotate the lense wheel a quarter rotation
     for (int i = 0; i < fullSteps/miniSteps; i++) {
       Motor2->step(miniSteps, FORWARD, DOUBLE);
       delay(spareTime);
     } 
     delay(holdTime);
+    // Update lensePos
     lensePos++;
   }
   else{
+    // Rotate the effect wheel a quarter rotation
     for (int i = 0; i < fullSteps/miniSteps; i++) {
       Motor1->step(miniSteps, FORWARD, DOUBLE);
       delay(spareTime);
     }
     delay(holdTime);
+    // Update lensePos
     lensePos = 0;
   }
 }
@@ -103,29 +113,31 @@ void manual(){
   buttonState2 = digitalRead(Button2);
   buttonState3 = digitalRead(Button3);
   
-  // Turn on LED to signal user mode
+  // Turn on LEDs to signal user mode
   digitalWrite(LED2, HIGH);
   digitalWrite(LED3, HIGH);
+  
+  // Rotate the lense wheel
   if (buttonState3 == HIGH){
-    // Turn on second LED to illustrate currently turning
+    // Lense wheel
+    // Turn off LEDs to illustrate currently turning
     digitalWrite(LED2, LOW);
     digitalWrite(LED3, LOW);
-    // Full quarter rotation of motor one for seperate wheel use
+    // Quarter rotation of Lense Wheel
     for (int i = 0; i < fullSteps/miniSteps; i++) {
       Motor1->step(miniSteps, FORWARD, DOUBLE);
       delay(spareTime);
     } 
-    // Turn off second LED as it can be rotated again
   }
   else if (buttonState2 == HIGH){
-    // Turn on second LED to illustrate currently turning
+    // Image wheel
+    // Turn off LEDs to illustrate currently turning
     digitalWrite(LED2, LOW);
     digitalWrite(LED3, LOW);
-    // Full quarter rotation of motor two for seperate wheel use
+    // Quarter rotation of the image wheel
     for (int i = 0; i < fullSteps/miniSteps; i++) {
       Motor2->step(miniSteps, FORWARD, DOUBLE);
       delay(spareTime);
     } 
-    // Turn off second LED as it can be rotated again
   }
 }
